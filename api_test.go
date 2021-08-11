@@ -15,66 +15,82 @@ import (
 	"testing"
 )
 
-func Test_GetBook_OK(t *testing.T) {
-	assertInstance := assert.New(t)
-	database.Setup()
-	db := database.GetDB()
+//type IntegrationTestSuit struct {
+//	suite.Suite
+//}
 
-	book, err := insertTestBook(db)
+func Test_get_book_with_id_returns_book_with_status_code_200(t *testing.T) {
+	assertInstance := assert.New(t)
+	dbConnection, db := getDb()
+
+	defer dbConnection.ClearTable()
+	defer db.Close()
+
+	book, err := seedTestData(db)
+
 	if err != nil {
 		assertInstance.Error(err)
 	}
 
-	req, w := setGetBookRouter(db, "/1")
+	router := setupRouter(db)
+	req,w :=makeApiRequest(router,"/book/1")
 
-	assertInstance.Equal(http.MethodGet, req.Method, "HTTP request method error")
-	assertInstance.Equal(http.StatusOK, w.Code, "HTTP request status code error")
+	assertInstance.Equal(http.MethodGet, req.Method,)
+	assertInstance.Equal(http.StatusOK, w.Code, )
 
 	body, err := ioutil.ReadAll(w.Body)
 	if err != nil {
 		assertInstance.Error(err)
 	}
-
 	actual := models.Book{}
+
 	if err := json.Unmarshal(body, &actual); err != nil {
 		assertInstance.Error(err)
 	}
 
 	actual.Model = gorm.Model{}
+
 	expected := book
 	expected.Model = gorm.Model{}
 	fmt.Println(expected,actual)
 	assertInstance.Equal(expected, actual)
-	database.ClearTable()
-	defer db.Close()
 }
 
-func setGetBookRouter(db *gorm.DB, url string) (*http.Request, *httptest.ResponseRecorder) {
-	router := gin.New()
-	api := &handlers.APIEnv{DB: db}
-	router.GET("/:id", api.GetBook)
+func getDb() (database.DbConnection ,*gorm.DB) {
+	connection := database.DbConnection{}
+	connection.Setup()
+	db := connection.GetDB()
+	return connection,db
+}
 
+func setupRouter(db *gorm.DB) (router *gin.Engine){
+	router = gin.New()
+	api := &handlers.APIEnv{DB: db}
+	router.GET("/book/:id", api.GetBook)
+	return router
+}
+
+func makeApiRequest(router *gin.Engine,url string) (*http.Request, *httptest.ResponseRecorder) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
+
 	if err != nil {
 		panic(err)
 	}
-
 	req.Header.Set("Content-Type", "application/json")
 	recorder := httptest.NewRecorder()
+
 	router.ServeHTTP(recorder, req)
 	return req, recorder
 }
 
-func insertTestBook(db *gorm.DB) (models.Book, error) {
+func seedTestData(db *gorm.DB) (models.Book, error) {
 	book := models.Book{
 		Author:    "test",
 		Name:      "test",
 		PageCount: 10,
 	}
-
 	if err := db.Create(&book).Error; err != nil {
 		return book, err
 	}
-
 	return book, nil
 }

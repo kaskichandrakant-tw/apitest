@@ -9,15 +9,12 @@ import (
 
 func Setup() *gin.Engine {
 	r := gin.Default()
+	databaseConnection := database.DbConnection{}
+	databaseConnection.Setup()
+
 	api := &handlers.APIEnv{
-		DB: database.GetDB(),
+		DB: databaseConnection.GetDB(),
 	}
-
-	//r.GET("", api.GetBooks)
-	r.GET("/:id", api.GetBook)
-	//r.POST("", api.CreateBook)
-	//r.PUT("/:id", api.UpdateBook)
-	//r.DELETE("/:id", api.DeleteBook)
-
+	r.GET("/book/:id", api.GetBook)
 	return r
 }
