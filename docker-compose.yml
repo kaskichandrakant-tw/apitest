@@ -8,3 +8,11 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
     - 5432:5432
+  mountebank:
+    build:
+      context: ./mountebank
+      dockerfile: Dockerfile
+    ports:
+    - 2525:2525
+    - 4545:4545
+    entrypoint: "npm run mock"

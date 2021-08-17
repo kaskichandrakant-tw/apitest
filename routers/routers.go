@@ -16,5 +16,6 @@ func Setup() *gin.Engine {
 		DB: databaseConnection.GetDB(),
 	}
 	r.GET("/book/:id", api.GetBook)
+	r.GET("/usio/bank", api.GetUSIOBank)
 	return r
 }

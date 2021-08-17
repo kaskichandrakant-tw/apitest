@@ -1,4 +1,4 @@
-package apitest
+package main
 
 import (
 	"apitest/database"
@@ -33,10 +33,10 @@ func Test_get_book_with_id_returns_book_with_status_code_200(t *testing.T) {
 	}
 
 	router := setupRouter(db)
-	req,w :=makeApiRequest(router,"/book/1")
+	req, w := makeApiRequest(router, "/book/1")
 
-	assertInstance.Equal(http.MethodGet, req.Method,)
-	assertInstance.Equal(http.StatusOK, w.Code, )
+	assertInstance.Equal(http.MethodGet, req.Method)
+	assertInstance.Equal(http.StatusOK, w.Code)
 
 	body, err := ioutil.ReadAll(w.Body)
 	if err != nil {
@@ -52,25 +52,25 @@ func Test_get_book_with_id_returns_book_with_status_code_200(t *testing.T) {
 
 	expected := book
 	expected.Model = gorm.Model{}
-	fmt.Println(expected,actual)
+	fmt.Println(expected, actual)
 	assertInstance.Equal(expected, actual)
 }
 
-func getDb() (database.DbConnection ,*gorm.DB) {
+func getDb() (database.DbConnection, *gorm.DB) {
 	connection := database.DbConnection{}
 	connection.Setup()
 	db := connection.GetDB()
-	return connection,db
+	return connection, db
 }
 
-func setupRouter(db *gorm.DB) (router *gin.Engine){
+func setupRouter(db *gorm.DB) (router *gin.Engine) {
 	router = gin.New()
 	api := &handlers.APIEnv{DB: db}
 	router.GET("/book/:id", api.GetBook)
 	return router
 }
 
-func makeApiRequest(router *gin.Engine,url string) (*http.Request, *httptest.ResponseRecorder) {
+func makeApiRequest(router *gin.Engine, url string) (*http.Request, *httptest.ResponseRecorder) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 
 	if err != nil {

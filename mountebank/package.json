@@ -1,0 +1,11 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "mock": "mb --configfile imposters.ejs --loglevel debug"
+  },
+  "author": "",
+  "license": "ISC"
+}

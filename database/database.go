@@ -11,9 +11,9 @@ type DbConnection struct {
 	DB *gorm.DB
 }
 
-func (connection *DbConnection)Setup() {
-	if(connection.DB != nil){
-		return;
+func (connection *DbConnection) Setup() {
+	if connection.DB != nil {
+		return
 	}
 	host := "localhost"
 	port := "5432"
@@ -37,11 +37,11 @@ func (connection *DbConnection)Setup() {
 	connection.DB = db
 }
 
-func (connection *DbConnection)GetDB() *gorm.DB {
+func (connection *DbConnection) GetDB() *gorm.DB {
 	return connection.DB
 }
 
-func (connection *DbConnection)ClearTable() {
+func (connection *DbConnection) ClearTable() {
 	connection.DB.Exec("DELETE FROM books")
 	connection.DB.Exec("ALTER SEQUENCE books_id_seq RESTART WITH 1")
 }

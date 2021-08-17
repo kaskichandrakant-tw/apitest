@@ -1,0 +1,79 @@
+[
+  {
+    "predicates": [
+      {
+        "equals": {
+          "method": "GET",
+          "path": "/api/v2/bank",
+          "headers": {
+            "Authorization": "12345"
+          }
+        }
+      }
+    ],
+    "responses": [
+      {
+        "is": {
+          "statusCode": 200,
+          "body": {
+            "Success": true,
+            "Data": {
+              "bankName": "newly started bank"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "predicates": [
+      {
+        "equals":   {
+          "method": "POST",
+          "path": "/api/v2/card/changepin",
+          "headers": {
+            "Authorization": "12345"
+          },
+          "body": {
+            "NewPin": "1234",
+            "Username": "username"
+          }
+        }
+      }
+    ],
+    "responses": [
+      {
+        "is": {
+          "statusCode": 200,
+          "body": {
+            "Success": true,
+            "Data": {
+              "message": "changed pin to 1234 for username"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+  "predicates": [
+    {
+      "equals": {
+        "method": "GET",
+        "path": "/api/v2",
+        "headers": {
+          "Authorization": "12345"
+        }
+      }
+    }
+  ],
+  "responses": [
+    {
+      "is": {
+        "statusCode": 200,
+        "body": "hello"
+      }
+    }
+  ]
+}
+]
