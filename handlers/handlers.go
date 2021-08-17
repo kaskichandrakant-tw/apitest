@@ -15,9 +15,6 @@ type ResponseLocal struct {
 	Success string
 	Data    map[string]string
 }
-type test interface {
-
-}
 
 type APIEnv struct {
 	DB *gorm.DB
